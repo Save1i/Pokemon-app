@@ -4,7 +4,7 @@ function App() {
 
   return (
     <>
-     
+      <p className='fs-1'>Hello</p>
     </>
   )
 }
