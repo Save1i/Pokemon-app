@@ -1,11 +1,12 @@
 import './App.css'
+import PokemonPage from './components/PokemonPage'
 
 function App() {
 
   return (
-    <>
-      <p className='fs-1'>Hello</p>
-    </>
+    <div className='container'>
+      <PokemonPage/>
+    </div>
   )
 }
 
