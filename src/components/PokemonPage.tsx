@@ -10,12 +10,21 @@ interface PokemonAbility {
   ability: NamedAPIResource
 }
 
+interface PokemonSprites  {
+  other: {
+    dream_world: {
+      front_default: string
+    }
+  }
+}
+
 interface Pokemon {
   id: number,
   name: string,
   base_experience: number,
   is_default: boolean,
   abilities: PokemonAbility,
+  sprites: PokemonSprites,
 }
 
 
@@ -59,6 +68,8 @@ const PokemonPage = () => {
       <div>
         <h1>{pokemon.name}</h1>
         <p>Base exp. {pokemon.base_experience}</p>
+
+        <img src={pokemon.sprites.other.dream_world.front_default} alt="" />
         
         <span>
           {
