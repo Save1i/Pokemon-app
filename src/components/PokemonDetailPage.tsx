@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid"
 import type { PokemonStat } from "./PokemonPage"
 
 type Props = {
@@ -6,14 +7,16 @@ type Props = {
 
 const PokemonDetailPage = ({stats}: Props) => {
   return (
-    <div className="row">
+    <div className="row g-3">
       {
         stats.map(pokemonStat => {
           return (
-            <div className="col-6" >
-              <p>{pokemonStat.stat.name}</p>
-              <div>
-                <span>{pokemonStat.base_stat}</span>
+            <div className="col-6" key={nanoid()}>
+              <div className="stat_item ">
+                <p>{pokemonStat.stat.name}</p>
+                <div>
+                  <span>{pokemonStat.base_stat}</span>
+                </div>
               </div>
             </div>
           )
