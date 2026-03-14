@@ -1,5 +1,6 @@
 import { nanoid } from "nanoid"
 import { useEffect, useState } from "react"
+import PokemonDetailPage from "./PokemonDetailPage"
 
 interface NamedAPIResource {
   name: string,
@@ -18,6 +19,12 @@ interface PokemonSprites  {
   }
 }
 
+export type PokemonStat = {
+  stat: NamedAPIResource,
+  effort: number,
+  base_stat: number
+}
+
 interface Pokemon {
   id: number,
   name: string,
@@ -25,6 +32,8 @@ interface Pokemon {
   is_default: boolean,
   abilities: PokemonAbility,
   sprites: PokemonSprites,
+  species: NamedAPIResource,
+  stats: Array<PokemonStat>
 }
 
 
@@ -53,7 +62,7 @@ const PokemonPage = () => {
   }, [])
 
   useEffect(() => {
-    fetch('https://pokeapi.co/api/v2/pokemon-species/pikachu')
+    fetch('https://pokeapi.co/api/v2/pokemon-species/pikachu') // можно отсюда брать из первого запроса {pokemon.species.url}
       .then((el) =>el.json())
       .then((el) => setPokemonSpecies(el))
   }, [])
@@ -82,6 +91,8 @@ const PokemonPage = () => {
              : <p>...</p>
           
           }
+
+          <PokemonDetailPage stats={pokemon.stats}/>
         </span>
       </div>
     </>
