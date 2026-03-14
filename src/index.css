@@ -1,4 +1,36 @@
-body {
-  background-color: #0c0a09 !important;
-  color: #f5f5f5 !important;
+:root {
+
+  --primary-orange-color: #FFB444;
+  --primary-blue-color: #00AFED;
+  --primary-dark-color: #000000;
+  --primary-white-color: #f5f5f5;
+  
+
+  --additional-blue-color: #ADDAEE;
+  --additional-dark-color: #0c0a09;
+
+  --primary-orange-rgb: 255, 180, 68;
+  --primary-blue-rgb: 0, 175, 237;
+  --primary-dark-rgb: 0, 0, 0;  
+  --primary-white-rgb: 245, 245, 245;
+  --additional-blue-rgb: 173, 218, 238;
+  --additional-dark-rgb: 12, 10, 9;
 }
+
+body {
+  background-color: var(--additional-dark-color) !important;
+  color: var(--primary-white-color) !important;
+}
+
+.stat_item  {
+  background-color: rgba(var(--primary-orange-rgb), 0.05);
+  border: 1px solid rgba(var(--primary-orange-rgb), 0.1);
+  border-radius: 24px;
+  padding: 16px;
+  transition: all 0.3s ease;
+}
+
+.stat_item:hover {
+    background-color: rgba(var(--primary-orange-rgb), 0.1);
+  }
+
