@@ -32,5 +32,19 @@ body {
 
 .stat_item:hover {
     background-color: rgba(var(--primary-orange-rgb), 0.1);
-  }
+}
+
+.progress-bar {
+  background-color: var(--primary-orange-color) !important;
+}
+
+.pokemon_detail {
+  position: fixed;
+  bottom: -500px;
+  background-color: rgba(var(--additional-dark-rgb), 0.95);
+}
+
+.pokemon_detail {
+  bottom: 0;
+}
 
