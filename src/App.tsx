@@ -4,9 +4,7 @@ import PokemonPage from './components/PokemonPage'
 function App() {
 
   return (
-    <div className='container'>
-      <PokemonPage/>
-    </div>
+    <PokemonPage/>
   )
 }
 
