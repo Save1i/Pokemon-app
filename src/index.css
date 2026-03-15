@@ -44,7 +44,11 @@ body {
   background-color: rgba(var(--additional-dark-rgb), 0.95);
 }
 
-.pokemon_detail {
+.pokemon_detail.active {
   bottom: 0;
+}
+
+.cursor-pointer  {
+  cursor: pointer;
 }
 
