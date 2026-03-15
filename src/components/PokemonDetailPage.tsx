@@ -3,11 +3,17 @@ import type { PokemonStat } from "./PokemonPage"
 
 type Props = {
   stats: Array<PokemonStat>
+  setShowDetail: (value: boolean) => void
+  showDetail: boolean
 }
 
-const PokemonDetailPage = ({stats}: Props) => {
+const PokemonDetailPage = ({stats, setShowDetail, showDetail}: Props) => {
   return (
-    <div className="pokemon_detail">
+    <div className="d-flex justify-content-center">
+    <div className={`pokemon_detail ${showDetail ? 'active' : ''} container justify-content-center`}>
+      <span className="cursor-pointer" onClick={() => {
+            setShowDetail(false)
+          }}>close</span>
       <div className="row g-3">
         {
           stats.map(pokemonStat => {
@@ -28,6 +34,7 @@ const PokemonDetailPage = ({stats}: Props) => {
           })
         }
       </div>
+    </div>
     </div>
   )
 }

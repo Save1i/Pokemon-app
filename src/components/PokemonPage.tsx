@@ -1,6 +1,7 @@
 import { nanoid } from "nanoid"
 import { useEffect, useState } from "react"
 import PokemonDetailPage from "./PokemonDetailPage"
+import Detail from "./Detail"
 
 interface NamedAPIResource {
   name: string,
@@ -54,6 +55,12 @@ interface PokemonSpecies {
 const PokemonPage = () => {
   const [pokemon, setPokemon] = useState<Pokemon | null>(null)
   const [pokemonSpecies , setPokemonSpecies] = useState<PokemonSpecies | null>(null)
+  const [showDetail, setShowDetail] = useState<boolean>(false)
+
+    const [isOpen, setIsOpen] = useState(false)
+
+  const handleOpen = () => setIsOpen(true)
+  const handleClose = () => setIsOpen(false)
 
   useEffect(() => {
     fetch('https://pokeapi.co/api/v2/pokemon/pikachu')
@@ -73,6 +80,16 @@ const PokemonPage = () => {
 
   return (
     <>
+     <button 
+      onClick={handleOpen}
+      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+    >
+      Open Drawer
+    </button>
+
+      <Detail open={isOpen} 
+        onOpenChange={setIsOpen}
+        onClose={handleClose}/>
       <div>Pokedex {pokemon.id}</div>
       <div>
         <h1>{pokemon.name}</h1>
@@ -80,7 +97,7 @@ const PokemonPage = () => {
 
         <img src={pokemon.sprites.other.dream_world.front_default} alt="" />
         
-        <span>
+        <div>
           {
             pokemonSpecies ?
               pokemonSpecies.flavor_text_entries.map((descrip) => {
@@ -92,8 +109,12 @@ const PokemonPage = () => {
           
           }
 
-          <PokemonDetailPage stats={pokemon.stats}/>
-        </span>
+          <span className="cursor-pointer" onClick={() => {
+            setShowDetail(true)
+          }}>View Stats</span>
+
+          <PokemonDetailPage stats={pokemon.stats} setShowDetail={setShowDetail} showDetail={showDetail} />
+        </div>
       </div>
     </>
     
