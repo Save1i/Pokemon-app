@@ -24,7 +24,7 @@ body {
 
 .stat_item  {
   background-color: rgba(var(--primary-orange-rgb), 0.05);
-  border: 1px solid rgba(var(--primary-orange-rgb), 0.1);
+  border: 1px solid rgba(var(--primary-orange-rgb), 0.4);  /*  0.1 */
   border-radius: 24px;
   padding: 16px;
   transition: all 0.3s ease;
@@ -37,15 +37,12 @@ body {
 .progress-bar {
   background-color: var(--primary-orange-color) !important;
 }
-
+ 
 .pokemon_detail {
-  position: fixed;
-  bottom: -500px;
-  background-color: rgba(var(--additional-dark-rgb), 0.95);
-}
-
-.pokemon_detail.active {
-  bottom: 0;
+  border: 1px solid rgba(var(--primary-orange-rgb), 0.4);
+  background-color: rgba(var(--primary-dark-rgb), 0.9);
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
 }
 
 .cursor-pointer  {
