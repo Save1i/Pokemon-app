@@ -1,5 +1,4 @@
 import { Route, Routes } from "react-router"
-import App from "../App"
 import PokemonPage from "../components/PokemonPage"
 import PokemonsList from "../components/PokemonsList"
 import Overview from "../overview/Overview"
