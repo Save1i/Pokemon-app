@@ -1,7 +1,6 @@
 import { nanoid } from "nanoid"
 import { useEffect, useState } from "react"
 import PokemonDetailPage from "./PokemonDetailPage"
-import Detail from "./Detail"
 
 interface NamedAPIResource {
   name: string,
@@ -55,12 +54,10 @@ interface PokemonSpecies {
 const PokemonPage = () => {
   const [pokemon, setPokemon] = useState<Pokemon | null>(null)
   const [pokemonSpecies , setPokemonSpecies] = useState<PokemonSpecies | null>(null)
-  const [showDetail, setShowDetail] = useState<boolean>(false)
 
     const [isOpen, setIsOpen] = useState(false)
 
   const handleOpen = () => setIsOpen(true)
-  const handleClose = () => setIsOpen(false)
 
   useEffect(() => {
     fetch('https://pokeapi.co/api/v2/pokemon/pikachu')
@@ -79,46 +76,44 @@ const PokemonPage = () => {
   }
 
   return (
-    <>
-     <button 
-      onClick={handleOpen}
-      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-    >
-      Open Drawer
-    </button>
+		<>
+			<div>Pokedex {pokemon.id}</div>
+			<div className='pokemon_page' id='pokemon_page'>
+				<h1>{pokemon.name}</h1>
+				<p>Base exp. {pokemon.base_experience}</p>
 
-      <Detail open={isOpen} 
-        onOpenChange={setIsOpen}
-        onClose={handleClose}/>
-      <div>Pokedex {pokemon.id}</div>
-      <div>
-        <h1>{pokemon.name}</h1>
-        <p>Base exp. {pokemon.base_experience}</p>
+				<img src={pokemon.sprites.other.dream_world.front_default} alt='' />
 
-        <img src={pokemon.sprites.other.dream_world.front_default} alt="" />
-        
-        <div>
-          {
-            pokemonSpecies ?
-              pokemonSpecies.flavor_text_entries.map((descrip) => {
-                if(descrip.language.name === 'en' && descrip.version.name === 'emerald') {
-                  return <li key={nanoid()}>{descrip.flavor_text}</li>
-                }
-              } )
-             : <p>...</p>
-          
-          }
+				<div>
+					{pokemonSpecies ? (
+						pokemonSpecies.flavor_text_entries.map(descrip => {
+							if (
+								descrip.language.name === 'en' &&
+								descrip.version.name === 'emerald'
+							) {
+								return <li key={nanoid()}>{descrip.flavor_text}</li>
+							}
+						})
+					) : (
+						<p>...</p>
+					)}
 
-          <span className="cursor-pointer" onClick={() => {
-            setShowDetail(true)
-          }}>View Stats</span>
+					<button
+						onClick={handleOpen}
+						className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600'
+					>
+						Open Drawer
+					</button>
+				</div>
 
-          <PokemonDetailPage stats={pokemon.stats} setShowDetail={setShowDetail} showDetail={showDetail} />
-        </div>
-      </div>
-    </>
-    
-  )
+				<PokemonDetailPage
+					stats={pokemon.stats}
+					open={isOpen}
+					onOpenChange={setIsOpen}
+				/>
+			</div>
+		</>
+	)
 }
 
 export default PokemonPage
