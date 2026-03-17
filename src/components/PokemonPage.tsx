@@ -53,7 +53,7 @@ interface PokemonSpecies {
 }
 
 const PokemonPage = () => {
-  let navigate = useNavigate()
+  const navigate = useNavigate()
   
   const pokemon = useParams<{pokemon: string}>()
   const [pokemonData, setPokemon] = useState<Pokemon | null>(null)
