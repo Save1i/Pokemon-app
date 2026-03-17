@@ -49,3 +49,12 @@ body {
   cursor: pointer;
 }
 
+.navigation_bar a{
+  color: var(--additional-blue-color);
+  text-decoration: none;
+}
+
+a.active-link {
+  color: var(--primary-orange-color)
+}
+
