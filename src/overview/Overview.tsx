@@ -7,15 +7,8 @@ const Overview = () => {
 				to='/'
 				end
 				className={({ isActive }) => (isActive ? 'active-link fw-bold' : '')}
-				>
-				Home
-			</NavLink>
-
-			<NavLink
-				to='/pokemon-page'
-				className={({ isActive }) => (isActive ? 'active-link fw-bold' : '')}
 			>
-				Pokemon Page
+				Home
 			</NavLink>
 
 			<NavLink
