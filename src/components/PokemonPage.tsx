@@ -1,7 +1,7 @@
 import { nanoid } from "nanoid"
 import { useEffect, useState } from "react"
 import PokemonDetailPage from "./PokemonDetailPage"
-import { useParams } from "react-router"
+import { useNavigate, useParams } from "react-router"
 
 export interface NamedAPIResource {
   name: string,
@@ -53,6 +53,8 @@ interface PokemonSpecies {
 }
 
 const PokemonPage = () => {
+  let navigate = useNavigate()
+  
   const pokemon = useParams<{pokemon: string}>()
   const [pokemonData, setPokemon] = useState<Pokemon | null>(null)
   const [pokemonSpecies , setPokemonSpecies] = useState<PokemonSpecies | null>(null)
@@ -82,6 +84,9 @@ const PokemonPage = () => {
 
   return (
 		<>
+    <button onClick={() => {
+      navigate(-1)
+    }}>Back</button>
 			<div>Pokedex {pokemonData.id}</div>
 			<div className='pokemon_page' id='pokemon_page'>
 				<h1>{pokemonData.name}</h1>
