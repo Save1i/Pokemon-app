@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router"
 import PokemonPage from "../components/PokemonPage"
 import PokemonsList from "../components/PokemonsList"
-import Layout from "../components/Layout"
+import Layout from "./Layout"
 import App from "../App"
 
 const AppRouters = () => {
