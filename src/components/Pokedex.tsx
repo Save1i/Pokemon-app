@@ -32,7 +32,7 @@ const Pokedex = () => {
 					return (
 						<li key={nanoid()}>
 							<NavLink
-								to={`/pokemon-page/${pokemon.name}`}
+								to={`/pokedex/${pokemon.name}`}
 								className={({ isActive }) =>
 									isActive ? 'active-link fw-bold' : ''
 								}
