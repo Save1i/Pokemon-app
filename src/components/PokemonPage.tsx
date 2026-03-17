@@ -1,8 +1,9 @@
 import { nanoid } from "nanoid"
 import { useEffect, useState } from "react"
 import PokemonDetailPage from "./PokemonDetailPage"
+import { useParams } from "react-router"
 
-interface NamedAPIResource {
+export interface NamedAPIResource {
   name: string,
   url: string
 }
@@ -52,7 +53,8 @@ interface PokemonSpecies {
 }
 
 const PokemonPage = () => {
-  const [pokemon, setPokemon] = useState<Pokemon | null>(null)
+  const pokemon = useParams<{pokemon: string}>()
+  const [pokemonData, setPokemon] = useState<Pokemon | null>(null)
   const [pokemonSpecies , setPokemonSpecies] = useState<PokemonSpecies | null>(null)
 
     const [isOpen, setIsOpen] = useState(false)
@@ -60,10 +62,13 @@ const PokemonPage = () => {
   const handleOpen = () => setIsOpen(true)
 
   useEffect(() => {
-    fetch('https://pokeapi.co/api/v2/pokemon/pikachu')
-      .then((el) =>el.json())
-      .then((el) => setPokemon(el))
-  }, [])
+    console.log(pokemon)
+    if(pokemon) {
+      fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.pokemon}`)
+				.then(el => el.json())
+				.then(el => setPokemon(el))
+    }
+	}, [pokemon])
 
   useEffect(() => {
     fetch('https://pokeapi.co/api/v2/pokemon-species/pikachu') // можно отсюда брать из первого запроса {pokemon.species.url}
@@ -71,18 +76,18 @@ const PokemonPage = () => {
       .then((el) => setPokemonSpecies(el))
   }, [])
 
-  if(pokemon === null) {
-    return <p>You don`t have any pokemons</p>
-  }
+  if (pokemonData === null) {
+		return <p>Unknown pokemon</p>
+	}
 
   return (
 		<>
-			<div>Pokedex {pokemon.id}</div>
+			<div>Pokedex {pokemonData.id}</div>
 			<div className='pokemon_page' id='pokemon_page'>
-				<h1>{pokemon.name}</h1>
-				<p>Base exp. {pokemon.base_experience}</p>
+				<h1>{pokemonData.name}</h1>
+				<p>Base exp. {pokemonData.base_experience}</p>
 
-				<img src={pokemon.sprites.other.dream_world.front_default} alt='' />
+				<img src={pokemonData.sprites.other.dream_world.front_default} alt='' />
 
 				<div>
 					{pokemonSpecies ? (
@@ -107,7 +112,7 @@ const PokemonPage = () => {
 				</div>
 
 				<PokemonDetailPage
-					stats={pokemon.stats}
+					stats={pokemonData.stats}
 					open={isOpen}
 					onOpenChange={setIsOpen}
 				/>
