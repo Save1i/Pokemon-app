@@ -19,10 +19,10 @@ const Overview = () => {
 			</NavLink>
 
 			<NavLink
-				to='/pokemon-list'
+				to='/pokedex'
 				className={({ isActive }) => (isActive ? 'active-link fw-bold' : '')}
 			>
-				Pokemon List
+				Pokedex
 			</NavLink>
 		</nav>
 	)
