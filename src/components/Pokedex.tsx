@@ -15,7 +15,7 @@ interface Named {
 const Pokedex = () => {
   const navigate = useNavigate()
 	const { lastPokemon } = usePokemonStore()
-	const [pokemons, setPokemons] = useState<Named | null>(null)
+	const [pokemons, setPokemons] = useState<Array<NamedAPIResource> | null>(null)
 
   useEffect(() => {
     if(!lastPokemon) {
@@ -29,7 +29,7 @@ const Pokedex = () => {
 	useEffect(() => {
 		fetch('https://pokeapi.co/api/v2/pokemon/?offset=20&limit=20')
 			.then(el => el.json())
-			.then(el => setPokemons(el))
+			.then(el => setPokemons(el.results))
 	}, [])
 
 	if (pokemons === null) {
@@ -39,7 +39,7 @@ const Pokedex = () => {
 	return (
 		<div>
 			<ul>
-				{pokemons.results.map(pokemon => (
+				{pokemons.map(pokemon => (
 					<li key={nanoid()}>
 						<NavLink
 							to={`/pokedex/${pokemon.name}`}
