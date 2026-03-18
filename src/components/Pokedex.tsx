@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { NavLink, useNavigate } from 'react-router'
 import { usePokemonStore } from '../store/pokemonStore'
@@ -17,6 +17,9 @@ const Pokedex = () => {
 	const { lastPokemon } = usePokemonStore()
 	const [pokemons, setPokemons] = useState<Array<NamedAPIResource> | null>(null)
 
+  const [page, setPage] = useState<number>(0)
+  const limitOfRender = useRef<number>(20)
+
   useEffect(() => {
     if(!lastPokemon) {
       navigate('/pokedex')
@@ -24,17 +27,31 @@ const Pokedex = () => {
     }
 
     navigate(`/pokedex/${lastPokemon}`)
-  }, [])
+  }, [lastPokemon])
 
 	useEffect(() => {
-		fetch('https://pokeapi.co/api/v2/pokemon/?offset=20&limit=20')
-			.then(el => el.json())
-			.then(el => setPokemons(el.results))
-	}, [])
+    const offset = limitOfRender.current * page
+
+    if(page || page >= 0) {
+      fetch(`https://pokeapi.co/api/v2/pokemon/?offset=${offset}&limit=${limitOfRender.current}`)
+        .then(el => el.json())
+        .then(el => {
+          if (pokemons === null) {
+            setPokemons(el.results)
+          } else {
+            setPokemons([...pokemons, ...el.results])
+          }
+        })
+    }
+	}, [page])
 
 	if (pokemons === null) {
 		return <p>Loading...</p>
 	}
+
+  const loadMorePokemons = () => {
+    setPage(page + 1)
+  }
 
 	return (
 		<div>
@@ -52,6 +69,9 @@ const Pokedex = () => {
 					</li>
 				))}
 			</ul>
+      <button onClick={() => {
+        loadMorePokemons()
+      }}>load more</button>
 		</div>
 	)
 }
