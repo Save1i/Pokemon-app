@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid'
 import { useEffect, useState } from 'react'
 
-import { NavLink } from 'react-router'
+import { NavLink, useNavigate } from 'react-router'
 import { usePokemonStore } from '../store/pokemonStore'
 import type { NamedAPIResource } from './PokemonPage'
 
@@ -13,8 +13,18 @@ interface Named {
 }
 
 const Pokedex = () => {
+  const navigate = useNavigate()
 	const { lastPokemon } = usePokemonStore()
 	const [pokemons, setPokemons] = useState<Named | null>(null)
+
+  useEffect(() => {
+    if(!lastPokemon) {
+      navigate('/pokedex')
+      return
+    }
+
+    navigate(`/pokedex/${lastPokemon}`)
+  }, [])
 
 	// Всегда загружаем список покемонов
 	useEffect(() => {
