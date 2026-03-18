@@ -52,7 +52,7 @@ interface PokemonSpecies {
 }
 const PokemonPage = () => {
 	const navigate = useNavigate()
-	const { setLastPokemon } = usePokemonStore()
+	const { setLastPokemon, clearLastPokemon } = usePokemonStore()
 	const { pokemon } = useParams<{ pokemon: string }>()
 	const [pokemonData, setPokemon] = useState<Pokemon | null>(null)
 	const [pokemonSpecies, setPokemonSpecies] = useState<PokemonSpecies | null>(
@@ -85,7 +85,11 @@ const PokemonPage = () => {
 
 	return (
 		<>
-			<button onClick={() => navigate('/pokedex')}>Back</button>
+			<button onClick={() => {
+          clearLastPokemon()
+          navigate('/pokedex')
+      }}>Back</button>
+      
 			<div>Pokedex {pokemonData.id}</div>
 			<div className='pokemon_page' id='pokemon_page'>
 				<h1>{pokemonData.name}</h1>
