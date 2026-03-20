@@ -12,13 +12,20 @@ interface Named {
 	results: Array<NamedAPIResource>
 }
 
+interface Pokemon {
+  image: string
+  name: string
+}
+
 const Pokedex = () => {
   const navigate = useNavigate()
 	const { lastPokemon } = usePokemonStore()
-	const [pokemons, setPokemons] = useState<Array<NamedAPIResource> | null>(null)
+	const [pokemons, setPokemons] = useState<Pokemon[] | null>(null)
 
   const [page, setPage] = useState<number>(0)
   const limitOfRender = useRef<number>(20)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [hasMore, setHasMore] = useState<boolean>(true)
 
   useEffect(() => {
     if(!lastPokemon) {
@@ -30,19 +37,54 @@ const Pokedex = () => {
   }, [lastPokemon])
 
 	useEffect(() => {
-    const offset = limitOfRender.current * page
+    const fetchPokemonList = async () => {{
+      if (isLoading || !hasMore) return
 
-    if(page || page >= 0) {
-      fetch(`https://pokeapi.co/api/v2/pokemon/?offset=${offset}&limit=${limitOfRender.current}`)
-        .then(el => el.json())
-        .then(el => {
-          if (pokemons === null) {
-            setPokemons(el.results)
+      setIsLoading(true)
+
+
+      const offset = limitOfRender.current * page
+
+      if(page || page >= 0) {
+
+        try {
+          const pokemonsName = await fetch(`https://pokeapi.co/api/v2/pokemon/?offset=${offset}&limit=${limitOfRender.current}`)
+
+          const data: Named = await pokemonsName.json()
+
+          setHasMore(!!data.next)
+
+          const pokemonDetails = await Promise.all(data.results.map(async (pokemon) => {
+            const detailResponse = await fetch(pokemon.url)
+            const detailData = await detailResponse.json()
+
+            const img = new Image()
+            img.src = detailData.sprites.front_default
+            await img.decode()
+
+            return {
+              image: detailData.sprites.front_default,
+              name: detailData.name
+            }
+          }))
+          
+          if(page === 0) {
+            setPokemons(pokemonDetails)
           } else {
-            setPokemons([...pokemons, ...el.results])
+            setPokemons(prev => prev ? [...prev, ...pokemonDetails] : pokemonDetails)
           }
-        })
-    }
+
+        } catch(error) {
+          console.error(error)
+        } finally {
+          setIsLoading(false)
+        }
+
+      }
+    }}
+
+    
+    fetchPokemonList()
 	}, [page])
 
 	if (pokemons === null) {
@@ -58,6 +100,7 @@ const Pokedex = () => {
 			<ul>
 				{pokemons.map(pokemon => (
 					<li key={nanoid()}>
+            <img src={pokemon.image} alt={pokemon.name} />
 						<NavLink
 							to={`/pokedex/${pokemon.name}`}
 							className={({ isActive }) =>
@@ -68,10 +111,19 @@ const Pokedex = () => {
 						</NavLink>
 					</li>
 				))}
+        {isLoading ? <li>Loading</li> : ""}
 			</ul>
-      <button onClick={() => {
-        loadMorePokemons()
-      }}>load more</button>
+
+      {hasMore && (
+        <button 
+          onClick={loadMorePokemons}
+          disabled={isLoading}
+        >
+          {isLoading ? 'Loading...' : 'Load More'}
+        </button>
+      )}
+      
+      {!hasMore && <p>No more Pokemon to load</p>}
 		</div>
 	)
 }
