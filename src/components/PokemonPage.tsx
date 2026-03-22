@@ -52,7 +52,7 @@ interface PokemonSpecies {
 }
 const PokemonPage = () => {
 	const navigate = useNavigate()
-	const { setLastPokemon, clearLastPokemon } = usePokemonStore()
+	const { setLastPokemon, clearLastPokemon, addPokemon } = usePokemonStore()
 	const { pokemon } = useParams<{ pokemon: string }>()
 	const [pokemonData, setPokemon] = useState<Pokemon | null>(null)
 	const [pokemonSpecies, setPokemonSpecies] = useState<PokemonSpecies | null>(
@@ -109,6 +109,10 @@ const PokemonPage = () => {
 					) : (
 						<p>Loading description...</p>
 					)}
+
+          <button onClick={() => addPokemon({id: pokemonData.id, name: pokemonData.name})}>
+            add pokemon
+          </button>
 
 					<button
 						onClick={handleOpen}
