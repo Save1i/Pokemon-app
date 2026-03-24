@@ -17,6 +17,13 @@ const Overview = () => {
 			>
 				Pokedex
 			</NavLink>
+			
+			<NavLink
+				to='/library'
+				className={({ isActive }) => (isActive ? 'active-link fw-bold' : '')}
+			>
+				Library
+			</NavLink>
 		</nav>
 	)
 }
