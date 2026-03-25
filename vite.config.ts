@@ -1,7 +1,14 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vite.dev/config/
 export default defineConfig({
-	plugins: [react()],
+  plugins: [react()],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        // quietDeps tells the legacy Sass API to ignore warnings in node_modules
+        quietDeps: true,
+      }
+    }
+  }
 })
