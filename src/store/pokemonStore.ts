@@ -12,7 +12,7 @@ interface PokemonStore {
 	clearLastPokemon: () => void
 
   playerPokemons: PokemonData[],
-  addPokemon: (pokemon: PokemonData) => void
+  addPlayerPokemon: (pokemon: PokemonData) => void
 }
 
 export const usePokemonStore = create<PokemonStore>()(
@@ -24,7 +24,7 @@ export const usePokemonStore = create<PokemonStore>()(
 			setLastPokemon: pokemon => set({ lastPokemon: pokemon }),
 			clearLastPokemon: () => set({ lastPokemon: null }),
 
-      addPokemon: (pokemon) => set((state) => {
+      addPlayerPokemon: (pokemon) => set((state) => {
 
         const exist = state.playerPokemons.some(el => el.id === pokemon.id)
         if(exist) {
