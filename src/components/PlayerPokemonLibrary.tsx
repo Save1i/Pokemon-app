@@ -31,8 +31,6 @@ const PlayerPokemonLibrary = () => {
 			return
 		}
 
-		const abortController = new AbortController()
-
 		const fetchPokemon = async () => {
 			setLoading(true)
 			setError(null)
@@ -41,9 +39,7 @@ const PlayerPokemonLibrary = () => {
 				const pokemonData = await Promise.all(
 					playerPokemonsName.map(async el => {
 						const detailResource = await fetch(
-							`https://pokeapi.co/api/v2/pokemon/${el.id}`,
-							{ signal: abortController.signal },
-						)
+							`https://pokeapi.co/api/v2/pokemon/${el.id}`)
 
 						const pokemonData = await detailResource.json()
 
@@ -58,7 +54,7 @@ const PlayerPokemonLibrary = () => {
 
 				setPlayerPokemons(pokemonData)
 			} catch (error) {
-				if (error instanceof Error && error.name !== 'AbortError') {
+				if (error instanceof Error) {
 					console.error('Error fetching pokemons:', error)
 					setError(error.message)
 				}
@@ -68,10 +64,6 @@ const PlayerPokemonLibrary = () => {
 		}
 
 		fetchPokemon()
-
-		return () => {
-			abortController.abort()
-		}
 	}, [playerPokemonsName])
 
 	if (loading) {
