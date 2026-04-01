@@ -80,6 +80,17 @@ const PlayerPokemonLibrary = () => {
 		return <p>Your library is empty</p>
 	}
 
+
+  const removeAllPokemons = () => {
+    const almostRemove = confirm("Are you shure?")
+
+    if(almostRemove) {
+      removeAllPlayserPokemon()
+    }
+
+    return
+  }
+
 	return (
 		<div>
 			{playerPokemons.map(el => (
@@ -90,7 +101,7 @@ const PlayerPokemonLibrary = () => {
 			))}
 
       <button onClick={() => {
-        removeAllPlayserPokemon()
+        removeAllPokemons()
       }}>Remove Pokemons</button>
 		</div>
 	)
