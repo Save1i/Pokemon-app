@@ -20,6 +20,8 @@ const PlayerPokemonLibrary = () => {
 		state => state.playerPokemons,
 	) as PokemonNameItem[]
 
+  const {removeAllPlayserPokemon} = usePokemonStore()
+
 	const [loading, setLoading] = useState(false)
 	const [playerPokemons, setPlayerPokemons] = useState<Pokemon[] | null>(null)
 	const [error, setError] = useState<string | null>(null)
@@ -86,6 +88,10 @@ const PlayerPokemonLibrary = () => {
 					<p key={el.id}>{el.name}</p>
 				</div>
 			))}
+
+      <button onClick={() => {
+        removeAllPlayserPokemon()
+      }}>Remove Pokemons</button>
 		</div>
 	)
 }
