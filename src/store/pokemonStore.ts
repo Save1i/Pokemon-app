@@ -12,7 +12,8 @@ interface PokemonStore {
 	clearLastPokemon: () => void
 
   playerPokemons: PokemonData[],
-  addPlayerPokemon: (pokemon: PokemonData) => void
+  addPlayerPokemon: (pokemon: PokemonData) => void,
+  removeAllPlayserPokemon: () => void,
 }
 
 export const usePokemonStore = create<PokemonStore>()(
@@ -36,7 +37,9 @@ export const usePokemonStore = create<PokemonStore>()(
           playerPokemons: [...state.playerPokemons, pokemon]
         }
 
-      })
+      }),
+
+      removeAllPlayserPokemon: () => set({playerPokemons: []}),
 		}),
 		{
 			name: 'pokemon-storage',
