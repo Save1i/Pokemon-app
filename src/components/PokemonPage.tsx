@@ -3,6 +3,10 @@ import { useEffect, useState } from 'react'
 import PokemonDetailPage from './PokemonDetailPage'
 import { useNavigate, useParams } from 'react-router'
 import { usePokemonStore } from '../store/pokemonStore'
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+
+import styles from '../styles/pokemonPage.module.css'
 
 export interface NamedAPIResource {
 	name: string
@@ -60,6 +64,8 @@ const PokemonPage = () => {
 	)
 	const [isOpen, setIsOpen] = useState(false)
 
+  const [isImageLoaded, setIsImageLoaded] = useState(false)
+
 	const handleOpen = () => setIsOpen(true)
 
 	useEffect(() => {
@@ -73,16 +79,29 @@ const PokemonPage = () => {
 
 	useEffect(() => {
 		if (pokemonData?.species?.url) {
+
+      setIsImageLoaded(false)
+
 			fetch(pokemonData.species.url)
 				.then(el => el.json())
-				.then(el => setPokemonSpecies(el))
+				.then(el => {
+
+          setPokemonSpecies(el)
+
+          const img = new Image()
+          img.src = pokemonData.sprites.other.dream_world.front_default
+          img.decode().then(() => {setIsImageLoaded(true)})
+        }
+        )
+
+
 		}
 	}, [pokemonData])
 
 	if (pokemonData === null) {
 		return <p>Loading...</p>
 	}
-
+console.log(isImageLoaded ? 'y':'n')
 	return (
 		<>
 			<button onClick={() => {
@@ -95,8 +114,13 @@ const PokemonPage = () => {
 				<h1>{pokemonData.name}</h1>
 				<p>Base exp. {pokemonData.base_experience}</p>
 
-				<img src={pokemonData.sprites.other.dream_world.front_default} alt='' />
-
+				{isImageLoaded ? <img src={pokemonData.sprites.other.dream_world.front_default} alt='' width={200} height={200}/> : <Skeleton 
+          baseColor="#334155" 
+          highlightColor="#475569" 
+          className={styles['pokemon-img__skeleton']} 
+        />  }
+        
+        
 				<div>
 					{pokemonSpecies ? (
 						pokemonSpecies.flavor_text_entries
