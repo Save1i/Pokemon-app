@@ -1,110 +1,83 @@
-import { useEffect, useState } from 'react'
+// PlayerPokemonLibrary.tsx
+import { useEffect, useState, useCallback } from 'react'
 import { usePokemonStore } from '../store/pokemonStore'
+import { getPokemon } from '../Api/getPokemon'
 
 interface Pokemon {
-	id: number // добавляем id для key
-	name: string
-	image: string
-	sprites?: {
-		front_default: string
-	}
-}
-
-interface PokemonNameItem {
-	id: number
-	name: string
+  id: number
+  name: string
+  image: string
 }
 
 const PlayerPokemonLibrary = () => {
-	const playerPokemonsName = usePokemonStore(
-		state => state.playerPokemons,
-	) as PokemonNameItem[]
+  const playerPokemonsName = usePokemonStore(state => state.playerPokemons) as { id: number; name: string }[]
+  const { removeAllPlayserPokemon } = usePokemonStore()
 
-  const {removeAllPlayserPokemon} = usePokemonStore()
+  const [loading, setLoading] = useState(false)
+  const [playerPokemons, setPlayerPokemons] = useState<Pokemon[] | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
-	const [loading, setLoading] = useState(false)
-	const [playerPokemons, setPlayerPokemons] = useState<Pokemon[] | null>(null)
-	const [error, setError] = useState<string | null>(null)
-
-	useEffect(() => {
-		// Если нет покемонов, сбрасываем
-		if (!playerPokemonsName || playerPokemonsName.length === 0) {
-			setPlayerPokemons(null)
-			return
-		}
-
-		const fetchPokemon = async () => {
-			setLoading(true)
-			setError(null)
-
-			try {
-				const pokemonData = await Promise.all(
-					playerPokemonsName.map(async el => {
-						const detailResource = await fetch(
-							`https://pokeapi.co/api/v2/pokemon/${el.id}`)
-
-						const pokemonData = await detailResource.json()
-
-						return {
-							id: pokemonData.id,
-							name: pokemonData.name,
-							image: pokemonData.sprites?.front_default || '',
-							sprites: pokemonData.sprites,
-						}
-					}),
-				)
-
-				setPlayerPokemons(pokemonData)
-			} catch (error) {
-				if (error instanceof Error) {
-					console.error('Error fetching pokemons:', error)
-					setError(error.message)
-				}
-			} finally {
-				setLoading(false)
-			}
-		}
-
-		fetchPokemon()
-	}, [playerPokemonsName])
-
-	if (loading) {
-		return <p>Loading...</p>
-	}
-
-	if (error) {
-		return <p>Error: {error}</p>
-	}
-
-	if (playerPokemons === null || playerPokemons.length === 0) {
-		return <p>Your library is empty</p>
-	}
-
-
-  const removeAllPokemons = () => {
-    const almostRemove = confirm("Are you shure?")
-
-    if(almostRemove) {
-      removeAllPlayserPokemon()
+  useEffect(() => {
+    if (!playerPokemonsName?.length) {
+      setPlayerPokemons(null)
+      return
     }
 
-    return
-  }
+    let isMounted = true // Предотвращаем обновления после размонтирования
 
-	return (
-		<div>
-			{playerPokemons.map(el => (
-				<div>
-					<img src={el.image} alt="" />
-					<p key={el.id}>{el.name}</p>
-				</div>
-			))}
+    const fetchPokemon = async () => {
+      setLoading(true)
+      setError(null)
 
-      <button onClick={() => {
-        removeAllPokemons()
-      }}>Remove Pokemons</button>
-		</div>
-	)
+      try {
+        const pokemonData = await getPokemon(playerPokemonsName)
+        
+        if (isMounted) {
+          setPlayerPokemons(pokemonData)
+        }
+      } catch (error) {
+        if (isMounted) {
+          setError(error instanceof Error ? error.message : 'Unknown error')
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false)
+        }
+      }
+    }
+
+    fetchPokemon()
+    
+    return () => {
+      isMounted = false
+    }
+  }, [playerPokemonsName])
+
+  const removeAllPokemons = useCallback(() => {
+    if (confirm("Are you sure?")) {
+      removeAllPlayserPokemon()
+    }
+  }, [removeAllPlayserPokemon])
+
+  // Ранние возвраты
+  if (loading) return <p>Loading...</p>
+  if (error) return <p>Error: {error}</p>
+  if (!playerPokemons?.length) return <p>Your library is empty</p>
+
+  return (
+    <div>
+      {playerPokemons.map(pokemon => (
+        <div key={pokemon.id}>
+          <img src={pokemon.image} alt={pokemon.name} />
+          <p>{pokemon.name}</p>
+        </div>
+      ))}
+
+      <button onClick={removeAllPokemons}>
+        Remove All Pokemons
+      </button>
+    </div>
+  )
 }
 
 export default PlayerPokemonLibrary
