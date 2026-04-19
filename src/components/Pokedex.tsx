@@ -4,13 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { NavLink, useNavigate } from 'react-router'
 import { usePokemonStore } from '../store/pokemonStore'
 import type { NamedAPIResource } from './PokemonPage'
-
-interface Named {
-	count: number
-	next: string
-	previous?: string
-	results: Array<NamedAPIResource>
-}
+import { PokemonsPaging } from '../Api/pokemonsPaging'
 
 interface Pokemon {
   image: string
@@ -48,30 +42,33 @@ const Pokedex = () => {
       if(page || page >= 0) {
 
         try {
-          const pokemonsName = await fetch(`https://pokeapi.co/api/v2/pokemon/?offset=${offset}&limit=${limitOfRender.current}`)
+          // const pokemonsName = await fetch(`https://pokeapi.co/api/v2/pokemon/?offset=${offset}&limit=${limitOfRender.current}`)
 
-          const data: Named = await pokemonsName.json()
+          // const data: Named = await pokemonsName.json()
 
-          setHasMore(!!data.next)
+          // setHasMore(!!data.next)
 
-          const pokemonDetails = await Promise.all(data.results.map(async (pokemon) => {
-            const detailResponse = await fetch(pokemon.url)
-            const detailData = await detailResponse.json()
+          // const pokemonDetails = await Promise.all(data.results.map(async (pokemon) => {
+          //   const detailResponse = await fetch(pokemon.url)
+          //   const detailData = await detailResponse.json()
 
-            const img = new Image()
-            img.src = detailData.sprites.front_default
-            await img.decode()
+          //   const img = new Image()
+          //   img.src = detailData.sprites.front_default
+          //   await img.decode()
 
-            return {
-              image: detailData.sprites.front_default,
-              name: detailData.name
-            }
-          }))
+          //   return {
+          //     image: detailData.sprites.front_default,
+          //     name: detailData.name
+          //   }
+          // }))
+
+          const pokemonDetails = await PokemonsPaging(offset, limitOfRender.current);
+          setHasMore(!!pokemonDetails.data.next)
           
           if(page === 0) {
-            setPokemons(pokemonDetails)
+            setPokemons(pokemonDetails.pokemonDetails)
           } else {
-            setPokemons(prev => prev ? [...prev, ...pokemonDetails] : pokemonDetails)
+            setPokemons(prev => prev ? [...prev, ...pokemonDetails.pokemonDetails] : pokemonDetails.pokemonDetails)
           }
 
         } catch(error) {
