@@ -13,7 +13,7 @@ interface Pokemon {
   }
 }
 
-export const getPokemon = async(playerPokemonsName: PokemonNameItem[]): Promise<Pokemon[]> => {
+export const getPokemons = async(playerPokemonsName: PokemonNameItem[]): Promise<Pokemon[]> => {
   // Добавляем return!
   return await Promise.all(
     playerPokemonsName.map(async (el) => {

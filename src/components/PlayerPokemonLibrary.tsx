@@ -1,7 +1,7 @@
 // PlayerPokemonLibrary.tsx
 import { useEffect, useState, useCallback } from 'react'
 import { usePokemonStore } from '../store/pokemonStore'
-import { getPokemon } from '../Api/getPokemon'
+import { getPokemons } from '../Api/getPokemons'
 
 interface Pokemon {
   id: number
@@ -30,7 +30,7 @@ const PlayerPokemonLibrary = () => {
       setError(null)
 
       try {
-        const pokemonData = await getPokemon(playerPokemonsName)
+        const pokemonData = await getPokemons(playerPokemonsName)
         
         if (isMounted) {
           setPlayerPokemons(pokemonData)
