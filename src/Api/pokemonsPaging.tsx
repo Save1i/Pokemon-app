@@ -28,7 +28,7 @@ export const PokemonsPaging = async(offset: number, limit: number) => {
   }))
 
   return {
-    data,
-    pokemonDetails
+    hasNextPage: !!data.next,
+    items: pokemonDetails
   }
 }

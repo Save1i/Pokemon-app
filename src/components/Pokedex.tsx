@@ -43,12 +43,12 @@ const Pokedex = () => {
         try {
 
           const pokemonDetails = await PokemonsPaging(offset, limitOfRender.current);
-          setHasMore(!!pokemonDetails.data.next)
+          setHasMore(pokemonDetails.hasNextPage)
           
           if(page === 0) {
-            setPokemons(pokemonDetails.pokemonDetails)
+            setPokemons(pokemonDetails.items)
           } else {
-            setPokemons(prev => prev ? [...prev, ...pokemonDetails.pokemonDetails] : pokemonDetails.pokemonDetails)
+            setPokemons(prev => prev ? [...prev, ...pokemonDetails.items] : pokemonDetails.items)
           }
 
         } catch(error) {
