@@ -7,6 +7,7 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 
 import styles from '../styles/pokemonPage.module.css'
+import { getPokemonData } from '../Api/getPokemonData'
 
 export interface NamedAPIResource {
 	name: string
@@ -71,9 +72,8 @@ const PokemonPage = () => {
 	useEffect(() => {
 		if (pokemon) {
 			setLastPokemon(pokemon)
-			fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
-				.then(el => el.json())
-				.then(el => setPokemon(el))
+			getPokemonData(pokemon)
+        .then(el => setPokemon(el))
 		}
 	}, [pokemon, setLastPokemon])
 
