@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from 'react'
 
 import { NavLink, useNavigate } from 'react-router'
 import { usePokemonStore } from '../store/pokemonStore'
-import type { NamedAPIResource } from './PokemonPage'
 import { PokemonsPaging } from '../Api/pokemonsPaging'
 
 interface Pokemon {
@@ -42,25 +41,6 @@ const Pokedex = () => {
       if(page || page >= 0) {
 
         try {
-          // const pokemonsName = await fetch(`https://pokeapi.co/api/v2/pokemon/?offset=${offset}&limit=${limitOfRender.current}`)
-
-          // const data: Named = await pokemonsName.json()
-
-          // setHasMore(!!data.next)
-
-          // const pokemonDetails = await Promise.all(data.results.map(async (pokemon) => {
-          //   const detailResponse = await fetch(pokemon.url)
-          //   const detailData = await detailResponse.json()
-
-          //   const img = new Image()
-          //   img.src = detailData.sprites.front_default
-          //   await img.decode()
-
-          //   return {
-          //     image: detailData.sprites.front_default,
-          //     name: detailData.name
-          //   }
-          // }))
 
           const pokemonDetails = await PokemonsPaging(offset, limitOfRender.current);
           setHasMore(!!pokemonDetails.data.next)
